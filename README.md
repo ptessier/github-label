@@ -6,21 +6,18 @@ Synchronize your github labels between repositories.
 
 First, [generate an access token here](https://github.com/settings/tokens), and allow the `repo` scope. Then,
 
-```
+```bash
 # clone the repository
 git clone git@github.com:MaintainX/mx-iterable.git
 
 # install dependencies
 yarn
-
-# ready run the script
-
 ```
 
 You can start the program like this:
 
 ```
-Usage: yarn start --repository <repository> --owner <owner> [options]
+Usage: yarn start <mode> <owner> <repository> [options]
 
 Options:
   -a, --access-token <token>  a GitHub access token (or a GITHUB_ACCESS_TOKEN environment variable)
