@@ -6,8 +6,7 @@
   "private": true,
   "scripts": {
     "start": "ts-node src/index.ts",
-    "clean": "rm-modules",
-    "lint": "yarn lint:ts && yarn lint:tslint && yarn lint:prettier",
+    "lint": "concurrently 'yarn:lint:ts' 'yarn:lint:tslint' 'yarn:lint:prettier'",
     "lint:ts": "tsc --noEmit --skipLibCheck",
     "lint:tslint": "tslint --project .",
     "lint:prettier": "prettier --check \"**/*.ts\""
@@ -19,8 +18,8 @@
   "devDependencies": {
     "@types/commander": "^2.12.2",
     "@types/node": "^18.11.10",
+    "concurrently": "^7.6.0",
     "prettier": "^2.8.0",
-    "rm-modules": "^1.0.2",
     "ts-node": "^10.9.1",
     "tslint": "^6.1.3",
     "tslint-config-prettier": "^1.18.0",
