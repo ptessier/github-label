@@ -1,0 +1,22 @@
+## build
+build/
+dist/
+
+## node_modules
+node_modules/
+
+## coverage
+coverage/
+
+## git
+.git
+.gitignore
+
+## prettier
+.prettierignore
+
+## vscode
+.vscode
+
+## yarn
+yarn.lock
