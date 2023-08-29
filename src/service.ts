@@ -1,12 +1,12 @@
 import { Octokit } from "@octokit/rest";
 import { calculateChanges } from "./changes";
 import { readLabels, writeLabels } from "./files";
+import { Mode } from "./mode";
 import {
   Change,
   CreateLabelRequest,
   DeleteLabelRequest,
   GetLabelsRequest,
-  Mode,
   Options,
   UpdateLabelRequest,
 } from "./types";
@@ -27,10 +27,10 @@ export class Service {
     switch (mode) {
       case "reset":
         return this.reset();
-      case "download":
-        return this.download();
-      case "upload":
-        return this.upload();
+      case "export":
+        return this.export();
+      case "import":
+        return this.import();
     }
   }
 
@@ -52,7 +52,7 @@ export class Service {
     );
   }
 
-  private async download() {
+  private async export() {
     const { log, owner, repo, file } = this.options;
 
     log.info(`Saving labels for "${owner}/${repo}"`);
@@ -70,7 +70,7 @@ export class Service {
     return labels;
   }
 
-  private async upload() {
+  private async import() {
     const { log, owner, repo, file, dryRun, allowExtraLabels } = this.options;
 
     log.info(`Syncing labels for "${owner}/${repo}"`);

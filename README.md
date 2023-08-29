@@ -22,15 +22,15 @@ Usage: yarn start <mode> <owner> <repository> [options]
 Options:
   -a, --access-token <token>  a GitHub access token (or a GITHUB_ACCESS_TOKEN environment variable)
   -d, --dry-run               calculate the required label changes without applying the changes
-  -m, --mode <mode>           the mode of the program
+  -m, --mode <mode>           the mode of the program, one of: "import", "export", "reset"
   -f, --file <path>           (default: labels.json) the path of the label configuration in
   -A, --allow-extra-labels    allow extra labels in the repo, otherwise they will be deleted
 ```
 
 ### Modes
 
-- **upload** upload your label to the repository from the `labels.json` file
-- **download** download the labels to the `labels.json` file
+- **import** import your label to the repository from the `labels.json` file
+- **export** export the labels to the `labels.json` file
 - **reset** reset the labels of the repository
 
 ## Format

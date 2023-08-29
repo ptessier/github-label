@@ -1,56 +1,55 @@
 import { Change, Label } from "./types";
 
-export function calculateChanges(
-  currentLabels: Label[],
-  configuredLabels: Label[]
-) {
+/**
+ * Calculate the changes between the actual labels and the expected labels.
+ */
+export function calculateChanges(actual: Label[], expected: Label[]) {
   const changes: Change[] = [];
   const resolvedLabels: Label[] = [];
 
-  configuredLabels.forEach((configuredLabel) => {
-    // Get current labels which match the configured label
-    const matches = currentLabels.filter((currentLabel) => {
-      if (
-        currentLabel.name.toLowerCase() === configuredLabel.name.toLowerCase()
-      ) {
+  expected.forEach((expectedLabel) => {
+    // Find existing labels that match the expected label
+    const matches = actual.filter((actualLabel) => {
+      if (actualLabel.name.toLowerCase() === expectedLabel.name.toLowerCase()) {
         return true;
       }
     });
 
-    // If we have no matches, the configured label is missing
+    // If we have no matches, the label is missing
     if (matches.length === 0) {
-      return changes.push(missing(configuredLabel));
+      return changes.push(missing(expectedLabel));
     }
 
     // Always take the first match
     const matchedLabel = matches[0];
+
     resolvedLabels.push(matchedLabel);
 
     const matchedDescription = matchedLabel.description || "";
     const configuredDescription =
-      configuredLabel.description || matchedDescription;
+      expectedLabel.description || matchedDescription;
 
     // If we have a match, but properties are not equal
     if (
-      configuredLabel.name !== matchedLabel.name ||
-      configuredLabel.color !== matchedLabel.color ||
+      expectedLabel.name !== matchedLabel.name ||
+      expectedLabel.color !== matchedLabel.color ||
       configuredDescription !== matchedDescription
     ) {
-      return changes.push(changed(matchedLabel, configuredLabel));
+      return changes.push(changed(matchedLabel, expectedLabel));
     }
   });
 
-  currentLabels
+  actual
     .filter((label) => resolvedLabels.indexOf(label) === -1)
-    .map((currentLabel) => added(currentLabel))
+    .map((label) => added(label))
     .forEach((change) => changes.push(change));
 
   return changes;
 }
 
 const missing = (expectedLabel: Label): Change => ({
-  name: expectedLabel.name,
   type: "create",
+  name: expectedLabel.name,
   expected: {
     name: expectedLabel.name,
     color: expectedLabel.color,
@@ -59,8 +58,8 @@ const missing = (expectedLabel: Label): Change => ({
 });
 
 const changed = (actualLabel: Label, expectedLabel: Label): Change => ({
-  name: actualLabel.name,
   type: "update",
+  name: actualLabel.name,
   actual: {
     name: actualLabel.name,
     color: actualLabel.color,
@@ -74,8 +73,8 @@ const changed = (actualLabel: Label, expectedLabel: Label): Change => ({
 });
 
 const added = (actualLabel: Label): Change => ({
-  name: actualLabel.name,
   type: "delete",
+  name: actualLabel.name,
   actual: {
     name: actualLabel.name,
     color: actualLabel.color,

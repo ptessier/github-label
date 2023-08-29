@@ -1,14 +1,13 @@
 import { program } from "commander";
+import * as pkg from "../package.json";
+import { isMode } from "./mode";
 import { Service } from "./service";
-import { Mode, Options } from "./types";
-import pkg = require("../package.json");
+import { Options } from "./types";
 
 program
   .version(pkg.version)
-  .argument("<mode>")
-  .argument("<owner>")
-  .argument("<repo>")
-  .usage("<mode> <owner> <repo> [options]")
+  .arguments("<mode> <owner>/<repo>")
+  .usage("<mode> <owner>/<repo> [options]")
   .option(
     "-a, --access-token <token>",
     "a GitHub access token (also settable with a GITHUB_ACCESS_TOKEN environment variable)",
@@ -29,39 +28,45 @@ program
   )
   .parse(process.argv);
 
-if (program.args.length !== 1) {
+if (program.args.length < 2) {
   program.help();
 }
 
+/**
+ * Get the options from the command line arguments.
+ */
 function getOptions(): Options {
   const opts = program.opts();
+
+  const mode = program.args[0];
+
+  if (!isMode(mode)) {
+    throw new Error(`Invalid mode: ${mode}`);
+  }
+
+  const path = program.args[1];
+  if (!path.includes("/")) {
+    throw new Error(`Invalid owner/repo: ${path}`);
+  }
+  const [owner, repo] = path.split("/");
 
   return {
     accessToken: opts.accessToken,
     allowExtraLabels: opts.allowExtraLabels,
     dryRun: opts.dryRun,
     file: opts.file,
-    owner: program.args[0],
-    repo: program.args[1],
     log: console,
+    mode,
+    owner,
+    repo,
   };
 }
 
 Promise.resolve(getOptions())
   .then((options: Options) => {
-    const mode = program.args[0];
-
-    if (!isMode(mode)) {
-      throw new Error(`Invalid mode: ${mode}`);
-    }
-
-    return new Service(options).process(mode);
+    return new Service(options).process(options.mode);
   })
   .catch((error) => {
     console.error(error);
     process.exit(1);
   });
-
-function isMode(value: string): value is Mode {
-  return ["upload", "reset", "download"].includes(value);
-}

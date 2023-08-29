@@ -1,4 +1,5 @@
 import { RestEndpointMethodTypes } from "@octokit/rest";
+import { Mode } from "./mode";
 
 export type Change =
   | {
@@ -25,6 +26,7 @@ export type Options = {
   allowExtraLabels: boolean;
   dryRun: boolean;
   file: string;
+  mode: Mode;
   owner: string;
   repo: string;
   log: {
@@ -32,10 +34,6 @@ export type Options = {
     warn: (message?: any, ...optionalParams: any[]) => void;
   };
 };
-
-const MODES = ["upload", "reset", "download"] as const;
-
-export type Mode = typeof MODES[number];
 
 /**
  * Octokit types
