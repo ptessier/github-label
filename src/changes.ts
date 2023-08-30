@@ -1,4 +1,4 @@
-import { Change, Label } from "./types";
+import { Change, Label } from './types';
 
 /**
  * Calculate the changes between the actual labels and the expected labels.
@@ -25,9 +25,8 @@ export function calculateChanges(actual: Label[], expected: Label[]) {
 
     resolvedLabels.push(matchedLabel);
 
-    const matchedDescription = matchedLabel.description || "";
-    const configuredDescription =
-      expectedLabel.description || matchedDescription;
+    const matchedDescription = matchedLabel.description || '';
+    const configuredDescription = expectedLabel.description || matchedDescription;
 
     // If we have a match, but properties are not equal
     if (
@@ -48,36 +47,36 @@ export function calculateChanges(actual: Label[], expected: Label[]) {
 }
 
 const missing = (expectedLabel: Label): Change => ({
-  type: "create",
+  type: 'create',
   name: expectedLabel.name,
   expected: {
     name: expectedLabel.name,
     color: expectedLabel.color,
-    description: expectedLabel.description || "",
+    description: expectedLabel.description || '',
   },
 });
 
 const changed = (actualLabel: Label, expectedLabel: Label): Change => ({
-  type: "update",
+  type: 'update',
   name: actualLabel.name,
   actual: {
     name: actualLabel.name,
     color: actualLabel.color,
-    description: actualLabel.description || "",
+    description: actualLabel.description || '',
   },
   expected: {
     name: expectedLabel.name,
     color: expectedLabel.color,
-    description: expectedLabel.description || actualLabel.description || "",
+    description: expectedLabel.description || actualLabel.description || '',
   },
 });
 
 const added = (actualLabel: Label): Change => ({
-  type: "delete",
+  type: 'delete',
   name: actualLabel.name,
   actual: {
     name: actualLabel.name,
     color: actualLabel.color,
-    description: actualLabel.description || "",
+    description: actualLabel.description || '',
   },
 });

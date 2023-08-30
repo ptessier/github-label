@@ -1,20 +1,26 @@
-import * as fs from "fs";
-import * as path from "path";
-import { Label } from "./types";
+import * as fs from 'fs/promises';
+import * as path from 'path';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import { Label } from './types';
 
-const folder = "labels";
+function getPath(...paths: string[]): string {
+  const __filename = fileURLToPath(import.meta.url);
+  const __dirname = dirname(__filename);
+
+  return path.resolve(__dirname, ...paths);
+}
 
 /**
  * Read a file from the labels folder.
  */
-export async function readFile(filename: string): Promise<string> {
+export function readFile(filename: string): Promise<string> {
   try {
-    const file = path.resolve(process.cwd(), folder, filename);
-    const resolvedPath = path.resolve(__dirname, file);
+    const filePath = getPath('..', 'labels', filename);
 
-    console.log("Reading from", resolvedPath);
+    console.log('Reading from', filePath);
 
-    return fs.promises.readFile(resolvedPath, { encoding: "utf-8" });
+    return fs.readFile(filePath, { encoding: 'utf-8' });
   } catch (error) {
     console.error(`Failed to read ${filename}`);
     process.exit(1);
@@ -24,14 +30,13 @@ export async function readFile(filename: string): Promise<string> {
 /**
  * Write a file to the labels folder.
  */
-export async function writeFile(filename: string, data: string): Promise<void> {
+export function writeFile(filename: string, data: string): Promise<void> {
   try {
-    const file = path.resolve(process.cwd(), folder, filename);
-    const resolvedPath = path.resolve(__dirname, file);
+    const filePath = getPath('..', 'labels', filename);
 
-    console.log("Writing to", resolvedPath);
+    console.log('Writing to', filePath);
 
-    return fs.promises.writeFile(resolvedPath, data, { encoding: "utf-8" });
+    return fs.writeFile(filePath, data, { encoding: 'utf-8' });
   } catch (error) {
     console.error(`Failed to write to ${filename}`);
     process.exit(1);
@@ -55,6 +60,6 @@ export async function readLabels(filename: string): Promise<Label[]> {
 /**
  * Write the labels from a file.
  */
-export async function writeLabels(filename: string, data: any): Promise<void> {
+export function writeLabels(filename: string, data: unknown): Promise<void> {
   return writeFile(filename, JSON.stringify(data, null, 2));
 }

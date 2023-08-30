@@ -1,7 +1,7 @@
-import { Octokit } from "@octokit/rest";
-import { calculateChanges } from "./changes";
-import { readLabels, writeLabels } from "./files";
-import { Mode } from "./mode";
+import { Octokit } from '@octokit/rest';
+import { calculateChanges } from './changes';
+import { readLabels, writeLabels } from './files';
+import { Mode } from './mode';
 import {
   Change,
   CreateLabelRequest,
@@ -9,7 +9,7 @@ import {
   GetLabelsRequest,
   Options,
   UpdateLabelRequest,
-} from "./types";
+} from './types';
 
 export class Service {
   options: Options;
@@ -23,21 +23,21 @@ export class Service {
     });
   }
 
-  async process(mode: Mode) {
+  public async process(mode: Mode) {
     switch (mode) {
-      case "reset":
+      case 'reset':
         return this.reset();
-      case "export":
+      case 'export':
         return this.export();
-      case "import":
+      case 'import':
         return this.import();
     }
   }
 
   private async reset() {
-    const { log, owner, repo } = this.options;
+    const { owner, repo } = this.options;
 
-    log.info(`Reset labels for "${owner}/${repo}"`);
+    console.info(`Reset labels for "${owner}/${repo}"`);
 
     const labels = await this.getLabels({ owner, repo });
 
@@ -47,15 +47,15 @@ export class Service {
           owner,
           repo,
           name,
-        })
-      )
+        }),
+      ),
     );
   }
 
   private async export() {
-    const { log, owner, repo, file } = this.options;
+    const { owner, repo, file } = this.options;
 
-    log.info(`Saving labels for "${owner}/${repo}"`);
+    console.info(`Saving labels for "${owner}/${repo}"`);
 
     const currentLabels = await this.getLabels({ owner, repo });
 
@@ -71,9 +71,9 @@ export class Service {
   }
 
   private async import() {
-    const { log, owner, repo, file, dryRun, allowExtraLabels } = this.options;
+    const { owner, repo, file, dryRun, allowExtraLabels } = this.options;
 
-    log.info(`Syncing labels for "${owner}/${repo}"`);
+    console.info(`Syncing labels for "${owner}/${repo}"`);
 
     const [currentLabels, labels] = await Promise.all([
       this.getLabels({ owner, repo }),
@@ -81,7 +81,7 @@ export class Service {
     ]);
 
     const changes = calculateChanges(currentLabels, labels).filter((change) => {
-      if (allowExtraLabels && change.type === "delete") {
+      if (allowExtraLabels && change.type === 'delete') {
         return false;
       }
 
@@ -93,7 +93,7 @@ export class Service {
     }
 
     if (changes.length) {
-      log.info("Applying label changes, please wait…");
+      console.info('Applying label changes, please wait…');
     }
 
     return Promise.all(changes.map((change) => this.applyChange(change)));
@@ -103,7 +103,7 @@ export class Service {
     const { owner, repo } = this.options;
 
     switch (change.type) {
-      case "create":
+      case 'create':
         return this.createLabel({
           owner,
           repo,
@@ -111,7 +111,7 @@ export class Service {
           color: change.expected.color,
           description: change.expected.description ?? undefined,
         });
-      case "update":
+      case 'update':
         return this.updateLabel({
           owner,
           repo,
@@ -120,7 +120,7 @@ export class Service {
           color: change.expected.color,
           description: change.expected.description ?? undefined,
         });
-      case "delete":
+      case 'delete':
         return this.deleteLabel({
           owner,
           repo,

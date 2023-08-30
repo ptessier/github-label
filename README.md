@@ -17,12 +17,15 @@ yarn
 You can start the program like this:
 
 ```
-Usage: yarn start <mode> <owner> <repository> [options]
+Usage: yarn <mode> <owner>/<repository> [options]
+
+Arguments:
+  mode                        the mode of the program, one of: "import", "export", "reset"
+  owner/repository            the owner and repository name, e.g. "ptessier/github-label"
 
 Options:
   -a, --access-token <token>  a GitHub access token (or a GITHUB_ACCESS_TOKEN environment variable)
   -d, --dry-run               calculate the required label changes without applying the changes
-  -m, --mode <mode>           the mode of the program, one of: "import", "export", "reset"
   -f, --file <path>           (default: labels.json) the path of the label configuration in
   -A, --allow-extra-labels    allow extra labels in the repo, otherwise they will be deleted
 ```
