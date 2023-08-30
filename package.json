@@ -4,6 +4,7 @@
   "description": "Github label tools",
   "main": "src/index.ts",
   "private": true,
+  "packageManager": "yarn@3.6.3",
   "scripts": {
     "start": "ts-node src/index.ts",
     "lint": "concurrently 'yarn:lint:ts' 'yarn:lint:tslint' 'yarn:lint:prettier'",
