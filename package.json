@@ -12,6 +12,9 @@
   "scripts": {
     "execute": "yarn node --no-warnings --experimental-vm-modules --es-module-specifier-resolution=node --experimental-loader ts-node/esm $*",
     "start": "yarn execute src/index.ts",
+    "export": "yarn start export",
+    "import": "yarn start import",
+    "reset": "yarn start reset",
     "lint": "concurrently 'yarn:lint:ts' 'yarn:lint:eslint'",
     "lint:ts": "tsc --noEmit --skipLibCheck",
     "lint:eslint": "eslint .",
