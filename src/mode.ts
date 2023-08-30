@@ -1,4 +1,4 @@
-const MODES = ["import", "export", "reset"] as const;
+const MODES = ['import', 'export', 'reset'] as const;
 
 export type Mode = (typeof MODES)[number];
 
